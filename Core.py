@@ -1,5 +1,6 @@
 #import section
 import openai
+import os
 from pydub import AudioSegment
 from docx import Document
 
@@ -14,39 +15,22 @@ def get_api_key(api_key_file):
 # Initialize the API with the retrieved key
 openai.api_key = get_api_key(api_key_file)
 
-# Load the audio file
-audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
-
-# Load your WAV file
-audio = AudioSegment.from_wav("EarningsCall.wav")
-
-# Convert to MP3
-audio.export("EarningsCall.mp3", format="mp3")
-
-# Get the duration in milliseconds
-duration_ms = len(audio_file)
+#---------------------------------------------Functions-------------------------------------------------------------
+def check_audio_format(file_path):
+    _, extension = os.path.splitext(file_path)
+    return extension.lower()
 
 def trim_audio(input_file, output_file, start_time, end_time):
     audio = AudioSegment.from_file(input_file)
     trimmed_audio = audio[start_time:end_time]
     trimmed_audio.export(output_file, format="wav")
 
-# Usage example
-output_file = "trimmed_audio.wav"
-start_time = 0  # Start time in milliseconds
-end_time = duration_ms/2   # End time in milliseconds
-
-input_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
-trim_audio(input_file_path, output_file, start_time, end_time)
-
-audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_audio.mp3"
-#use the Whisper model to take the audio and transcribe the file
 def transcribe_audio(audio_file_path):
     with open(audio_file_path, 'rb') as audio_file:
         transcription = openai.Audio.transcribe("whisper-1",audio_file)
     return transcription['text']
 
-#Summarizing and analyzing the transcript with GPT-4
+#-----------------------Summarizing and analyzing the transcript with GPT-3------------------------------------------
 
 #you can do this all in one function but it is found that splitting up the functions allow for higher quality. 
 # Here we take the raw text and pass it through each function. 
@@ -127,9 +111,40 @@ def save_as_docx(minutes, filename):
         doc.add_paragraph()
     doc.save(filename)
 
-audio_file_path = "EarningsCall.mp3"
-transcription = transcribe_audio(audio_file_path)
-minutes = meeting_minutes(transcription)
-print(minutes)
+#----------------------------Main Body----------------------------------------
+def main():
+    audio_format = check_audio_format(audio_file_path)
 
-save_as_docx(minutes, 'meeting_minutes.docx')
+    if audio_format != '.mp3':
+        print(f'The file {audio_file_path} is not an MP3 file.')
+        audio.export("EarningsCall.mp3", format="mp3")
+        audio_file_path = "EarningsCall.mp3"
+
+
+    # Get the duration in milliseconds
+    duration_ms = len(audio_file)
+
+    #reducing the size of the wav file
+    output_file = "trimmed_audio.wav"
+    start_time = 0  # Start time in milliseconds
+    end_time = duration_ms/3   # End time in milliseconds
+
+    input_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
+    trim_audio(input_file_path, output_file, start_time, end_time)
+
+    #use the Whisper model to take the audio and transcribe the file
+    transcription = transcribe_audio(audio_file_path)
+    print(transcription)
+    minutes = meeting_minutes(transcription)
+    print(minutes)
+
+    save_as_docx(minutes, 'meeting_minutes.docx')
+
+# This is the main code, calling the main and aditional adjustment. 
+# Load the audio file
+audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
+# Load your WAV file
+audio = AudioSegment.from_wav("EarningsCall.wav")
+
+if __name__ == "__main__":
+    main()
