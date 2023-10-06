@@ -4,7 +4,7 @@
 import openai
 from docx import Document
 
-audio_file_path = 'C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav'
+audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
 
 #use the Whisper model to take the audio and transcribe the file
 def transcribe_audio(audio_file_path):
