@@ -4,6 +4,17 @@
 import openai
 from docx import Document
 
+#get your API key to run the code but save it outside of your git rapository. 
+api_key_file = r"C:\Users\natha\Documents\Coding\MeetingMinutesKey.txt"  # Path to the text file containing the API key
+
+def get_api_key(api_key_file):
+    with open(api_key_file, 'r') as file:
+        api_key = file.read().strip()
+    return api_key
+
+# Initialize the API with the retrieved key
+openai.api_key = get_api_key(api_key_file)
+
 audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
 
 #use the Whisper model to take the audio and transcribe the file
