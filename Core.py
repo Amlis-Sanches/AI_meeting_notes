@@ -19,6 +19,12 @@ openai.api_key = get_api_key(api_key_file)
 # Load the audio file
 audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
 
+# Load your WAV file
+audio = AudioSegment.from_wav("EarningsCall.wav")
+
+# Convert to MP3
+audio.export("EarningsCall.mp3", format="mp3")
+
 # Get the duration in milliseconds
 duration_ms = len(audio_file)
 
@@ -32,9 +38,10 @@ output_file = "trimmed_audio.wav"
 start_time = 0  # Start time in milliseconds
 end_time = duration_ms/2   # End time in milliseconds
 
-trim_audio(audio_file, output_file, start_time, end_time)
+input_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
+trim_audio(input_file_path, output_file, start_time, end_time)
 
-audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_audio.wav"
+audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_audio.mp3"
 #use the Whisper model to take the audio and transcribe the file
 def transcribe_audio(audio_file_path):
     with open(audio_file_path, 'rb') as audio_file:
