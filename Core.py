@@ -119,10 +119,10 @@ audio.export("EarningsCall.mp3", format="mp3")
 # Get the duration in milliseconds
 duration_ms = len(audio_file)
 
-# Usage example
+#reducing the size of the wav file
 output_file = "trimmed_audio.wav"
 start_time = 0  # Start time in milliseconds
-end_time = duration_ms/2   # End time in milliseconds
+end_time = duration_ms/3   # End time in milliseconds
 
 input_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
 trim_audio(input_file_path, output_file, start_time, end_time)
@@ -132,6 +132,7 @@ audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_aud
 
 audio_file_path = "EarningsCall.mp3"
 transcription = transcribe_audio(audio_file_path)
+print(transcription)
 minutes = meeting_minutes(transcription)
 print(minutes)
 
