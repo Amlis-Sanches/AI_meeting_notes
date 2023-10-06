@@ -1,5 +1,3 @@
-
-
 #import section
 import openai
 from pydub import AudioSegment
