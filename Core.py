@@ -2,6 +2,7 @@
 
 #import section
 import openai
+from pydub import AudioSegment
 from docx import Document
 
 #get your API key to run the code but save it outside of your git rapository. 
@@ -15,8 +16,25 @@ def get_api_key(api_key_file):
 # Initialize the API with the retrieved key
 openai.api_key = get_api_key(api_key_file)
 
-audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
+# Load the audio file
+audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
 
+# Get the duration in milliseconds
+duration_ms = len(audio_file)
+
+def trim_audio(input_file, output_file, start_time, end_time):
+    audio = AudioSegment.from_file(input_file)
+    trimmed_audio = audio[start_time:end_time]
+    trimmed_audio.export(output_file, format="wav")
+
+# Usage example
+output_file = "trimmed_audio.wav"
+start_time = 0  # Start time in milliseconds
+end_time = duration_ms/2   # End time in milliseconds
+
+trim_audio(audio_file, output_file, start_time, end_time)
+
+audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_audio.wav"
 #use the Whisper model to take the audio and transcribe the file
 def transcribe_audio(audio_file_path):
     with open(audio_file_path, 'rb') as audio_file:
