@@ -48,7 +48,7 @@ def transcribe_audio(audio_file_path):
         transcription = openai.Audio.transcribe("whisper-1",audio_file)
     return transcription['text']
 
-#Summarizing nd analyzing the transcript with GPT-4
+#Summarizing and analyzing the transcript with GPT-4
 
 #you can do this all in one function but it is found that splitting up the functions allow for higher quality. 
 # Here we take the raw text and pass it through each function. 
@@ -69,7 +69,7 @@ def meeting_minutes(transcription):
 #take the text and summarizes it into a concise abstract paragraph.
 def abstract_summary_extraction(transcription):
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="text-davinci-003",
         temperature=0,
         messages=[
             {
@@ -87,7 +87,7 @@ def abstract_summary_extraction(transcription):
 #--Extract Key Points
 def key_points_extraction(transcription):
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="text-davinci-003",
         temperature=0,
         messages=[
             {
@@ -105,7 +105,7 @@ def key_points_extraction(transcription):
 #--Action Item Extraction
 def action_item_extraction(transcription):
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="text-davinci-003",
         temperature=0,
         messages=[
             {
@@ -123,7 +123,7 @@ def action_item_extraction(transcription):
 #--Sentiment Analysis
 def sentiment_analysis(transcription):
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="text-davinci-003",
         temperature=0,
         messages=[
             {
@@ -150,7 +150,7 @@ def save_as_docx(minutes, filename):
         doc.add_paragraph()
     doc.save(filename)
 
-audio_file_path = "Earningscall.wav"
+audio_file_path = "EarningsCall.mp3"
 transcription = transcribe_audio(audio_file_path)
 minutes = meeting_minutes(transcription)
 print(minutes)
