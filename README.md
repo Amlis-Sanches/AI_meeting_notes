@@ -2,7 +2,7 @@
 This is to build further on OpenAI's GPT-3 to evaluate meeting notes idea and create something that can be reliably used for meeting. 
 Date: 10/5/223
 following instructions from: https://platform.openai.com/docs/tutorials/meeting-minutes (has been mondified since not using gpt-4)
-Required Python Packages: Python-docx, pydub, OpenAI keyand OpenAI
+Required Python Packages: Python-docx, pydub, OpenAI, PyQt5, PyQt5-tools
 Required items: 
 --ffmpeg from ffmpeg.org (https://www.youtube.com/watch?v=jZLqNocSQDM)
     I am using the Master full build from Gyan

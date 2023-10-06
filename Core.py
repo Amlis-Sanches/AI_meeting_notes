@@ -3,6 +3,8 @@ import openai
 import os
 from pydub import AudioSegment
 from docx import Document
+from PyQt5.QtWidgets import QApplication, QWidget
+import sys
 
 #get your API key to run the code but save it outside of your git rapository. 
 api_key_file = r"C:\Users\natha\Documents\Coding\MeetingMinutesKey.txt"  # Path to the text file containing the API key
@@ -146,5 +148,14 @@ audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting
 # Load your WAV file
 audio = AudioSegment.from_wav("EarningsCall.wav")
 
-if __name__ == "__main__":
-    main()
+#--------------------Interactive Platform----------------------------------
+app = QApplication(sys.argv)
+
+window = QWidget()
+window.setWindowTitle('Simple Window')
+window.show()
+
+sys.exit(app.exec_())
+
+#if __name__ == "__main__":
+#    main()
