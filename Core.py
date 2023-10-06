@@ -14,39 +14,18 @@ def get_api_key(api_key_file):
 # Initialize the API with the retrieved key
 openai.api_key = get_api_key(api_key_file)
 
-# Load the audio file
-audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
-
-# Load your WAV file
-audio = AudioSegment.from_wav("EarningsCall.wav")
-
-# Convert to MP3
-audio.export("EarningsCall.mp3", format="mp3")
-
-# Get the duration in milliseconds
-duration_ms = len(audio_file)
-
+#---------------------------------------------Functions-------------------------------------------------------------
 def trim_audio(input_file, output_file, start_time, end_time):
     audio = AudioSegment.from_file(input_file)
     trimmed_audio = audio[start_time:end_time]
     trimmed_audio.export(output_file, format="wav")
 
-# Usage example
-output_file = "trimmed_audio.wav"
-start_time = 0  # Start time in milliseconds
-end_time = duration_ms/2   # End time in milliseconds
-
-input_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
-trim_audio(input_file_path, output_file, start_time, end_time)
-
-audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_audio.mp3"
-#use the Whisper model to take the audio and transcribe the file
 def transcribe_audio(audio_file_path):
     with open(audio_file_path, 'rb') as audio_file:
         transcription = openai.Audio.transcribe("whisper-1",audio_file)
     return transcription['text']
 
-#Summarizing and analyzing the transcript with GPT-4
+#-----------------------Summarizing and analyzing the transcript with GPT-3------------------------------------------
 
 #you can do this all in one function but it is found that splitting up the functions allow for higher quality. 
 # Here we take the raw text and pass it through each function. 
@@ -126,6 +105,30 @@ def save_as_docx(minutes, filename):
         # Add a line break between sections
         doc.add_paragraph()
     doc.save(filename)
+
+#----------------------------Main Body----------------------------------------
+# Load the audio file
+audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
+
+# Load your WAV file
+audio = AudioSegment.from_wav("EarningsCall.wav")
+
+# Convert to MP3
+audio.export("EarningsCall.mp3", format="mp3")
+
+# Get the duration in milliseconds
+duration_ms = len(audio_file)
+
+# Usage example
+output_file = "trimmed_audio.wav"
+start_time = 0  # Start time in milliseconds
+end_time = duration_ms/2   # End time in milliseconds
+
+input_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav"
+trim_audio(input_file_path, output_file, start_time, end_time)
+
+audio_file_path = r"C:\Users\natha\Documents\Coding\AI_meeting_notes\trimmed_audio.mp3"
+#use the Whisper model to take the audio and transcribe the file
 
 audio_file_path = "EarningsCall.mp3"
 transcription = transcribe_audio(audio_file_path)
