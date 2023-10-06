@@ -3,8 +3,6 @@ import openai
 import os
 from pydub import AudioSegment
 from docx import Document
-from PyQt5.QtWidgets import QApplication, QWidget
-import sys
 
 #get your API key to run the code but save it outside of your git rapository. 
 api_key_file = r"C:\Users\natha\Documents\Coding\MeetingMinutesKey.txt"  # Path to the text file containing the API key
@@ -18,15 +16,18 @@ def get_api_key(api_key_file):
 openai.api_key = get_api_key(api_key_file)
 
 #---------------------------------------------Functions-------------------------------------------------------------
+#check what type the audio file is. 
 def check_audio_format(file_path):
     _, extension = os.path.splitext(file_path)
     return extension.lower()
 
+#Trim the audio file incase it is to long
 def trim_audio(input_file, output_file, start_time, end_time):
     audio = AudioSegment.from_file(input_file)
     trimmed_audio = audio[start_time:end_time]
     trimmed_audio.export(output_file, format="wav")
 
+#This is for the main part of the meeting notes code. Transcribing it into words will allow us to submit the text through the API key. This will send the audio file to whisper and then you will recieve text back.
 def transcribe_audio(audio_file_path):
     with open(audio_file_path, 'rb') as audio_file:
         transcription = openai.Audio.transcribe("whisper-1",audio_file)
@@ -147,15 +148,6 @@ def main():
 audio_file = AudioSegment.from_file(r"C:\Users\natha\Documents\Coding\AI_meeting_notes\EarningsCall.wav")
 # Load your WAV file
 audio = AudioSegment.from_wav("EarningsCall.wav")
-
-#--------------------Interactive Platform----------------------------------
-app = QApplication(sys.argv)
-
-window = QWidget()
-window.setWindowTitle('Simple Window')
-window.show()
-
-sys.exit(app.exec_())
 
 #if __name__ == "__main__":
 #    main()
