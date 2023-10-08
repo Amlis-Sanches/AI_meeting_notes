@@ -3,6 +3,7 @@ import openai
 import os
 from pydub import AudioSegment
 from docx import Document
+from PyQt6.QtWidgets import *
 
 #get your API key to run the code but save it outside of your git rapository. 
 api_key_file = r"C:\Users\natha\Documents\Coding\MeetingMinutesKey.txt"  # Path to the text file containing the API key
@@ -142,6 +143,13 @@ def main():
     print(minutes)
 
     save_as_docx(minutes, 'meeting_minutes.docx')
+
+#-------------------------------Interactive window------------------------------
+app = QApplication([])
+label = QLabel('Hello World!')
+label.show()
+app.exec()
+
 
 # This is the main code, calling the main and aditional adjustment. 
 # Load the audio file
