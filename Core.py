@@ -1,15 +1,14 @@
-#import section
+#------------------------Import Section-----------------------------#
 import openai
 import os
 import sys
 from pydub import AudioSegment
 from docx import Document
 from PyQt6.QtWidgets import QApplication, QInputDialog
+#-------------------------------------------------------------------#
 
-#Pull Files section
-#get your API key to run the code but save it outside of your git rapository. 
 
-#---------------------------------------------Functions-------------------------------------------------------------
+#---------------------------------------------Functions-------------#
 
 def get_api_key(api_key_file):
     with open(api_key_file, 'r') as file:
@@ -33,7 +32,12 @@ def transcribe_audio(audio_file_path):
         transcription = openai.Audio.transcribe("whisper-1",audio_file)
     return transcription['text']
 
-#-----------------------Summarizing and analyzing the transcript with GPT-3------------------------------------------
+#------------Summarizing and analyzing the transcript with GPT-3----#
+#This function library is do to the instructions from OpenAI. This  #
+#code was modified from GPT4 to GPT 3.5 since most do not have acess#
+#to GPT 4.                                                          #
+# https://platform.openai.com/docs/tutorials/meeting-minutes        #
+#-------------------------------------------------------------------#
 
 #you can do this all in one function but it is found that splitting up the functions allow for higher quality. 
 # Here we take the raw text and pass it through each function. 
@@ -50,7 +54,6 @@ def meeting_minutes(transcription):
         'sentiment': sentiment
     }
 
-#--Summary extraction
 #take the text and summarizes it into a concise abstract paragraph.
 def abstract_summary_extraction(transcription):
     response = openai.Completion.create(
@@ -114,7 +117,10 @@ def save_as_docx(minutes, filename):
         doc.add_paragraph()
     doc.save(filename)
 
-#----------------------------Main Body----------------------------------------
+#---------------------------Main Body-------------------------------#
+#This is the main body of the program that conducts the analysis for#
+#The audio file. This is where the magic happens.                   #
+#-------------------------------------------------------------------#
 def main():
 
     audio_format = check_audio_format(audio_file_path)
@@ -144,18 +150,18 @@ def main():
 
     save_as_docx(minutes, 'meeting_minutes.docx')
 
-#----------------------------Interactive window for API key-----#
+#--------------Interactive window for API key-------------------#
 #This section asks for you to imput the API key for open AI and #
 #store it on your hardrive main folder. This way the API key is #
 #seporate from the program and you can remove when needed.      #
 #---------------------------------------------------------------#
 
-#check file path
-current_directory = os.path.dirname(os.path.abspath(__file__))
-# Move up one directory
-parent_directory = os.path.dirname(current_directory)
-api_key_file = os.path.join(parent_directory, "api_key.txt")# Path to the text file containing the API key
+#Path directory check
+current_directory = os.path.dirname(os.path.abspath(__file__)) #check file path
+parent_directory = os.path.dirname(current_directory) # Move up one directory
+api_key_file = os.path.join(parent_directory, "api_key.txt") # Path to the text file containing the API key
 
+#test and see if the file is there. if not, prompt for the file and make one
 if os.path.exists(api_key_file):
     # Initialize the API with the retrieved key
     openai.api_key = get_api_key(api_key_file)
@@ -163,7 +169,6 @@ else:
     app = QApplication(sys.argv)
     # Get user input for the API key
     api_key, ok = QInputDialog.getText(None, "API Key Input", "Please enter your API key:")
-
     # If the user pressed OK and provided an input, save it to a file
     if ok and api_key:
         with open(api_key_file, 'w') as file:
