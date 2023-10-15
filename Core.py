@@ -1,13 +1,13 @@
 #import section
 import openai
 import os
+import sys
 from pydub import AudioSegment
 from docx import Document
-from PyQt6.QtWidgets import *
+from PyQt6.QtWidgets import QApplication, QInputDialog
 
 #Pull Files section
 #get your API key to run the code but save it outside of your git rapository. 
-api_key_file = r"C:\Users\natha\Documents\Coding\MeetingMinutesKey.txt"  # Path to the text file containing the API key
 
 #---------------------------------------------Functions-------------------------------------------------------------
 
@@ -114,10 +114,29 @@ def save_as_docx(minutes, filename):
         doc.add_paragraph()
     doc.save(filename)
 
+def save_api_key(api_key):
+    # Determine the current directory where the script is located
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    # Move up one directory to get the parent directory
+    parent_directory = os.path.dirname(current_directory)
+    # Create the path to the api_key.txt file within that directory
+    api_key_file = os.path.join(parent_directory, "api_key.txt")
+    # Save the API key to the generated path
+    with open(api_key_file, 'w') as file:
+        file.write(api_key)
+
+
+def prompt_for_api_key():
+    # Get user input for the API key
+    api_key, ok = QInputDialog.getText(None, "API Key Input", "Please enter your API key:")
+
+    # If the user pressed OK and provided an input, save it to a file
+    if ok and api_key:
+        save_api_key(api_key)
+
+
 #----------------------------Main Body----------------------------------------
 def main():
-    # Initialize the API with the retrieved key
-    openai.api_key = get_api_key(api_key_file)
 
     audio_format = check_audio_format(audio_file_path)
 
@@ -146,14 +165,32 @@ def main():
 
     save_as_docx(minutes, 'meeting_minutes.docx')
 
-#-------------------------------Interactive window------------------------------
+#----------------------------Interactive window for API key-----#
+#This section asks for you to imput the API key for open AI and #
+#store it on your hardrive main folder. This way the API key is #
+#seporate from the program and you can remove when needed.      #
+#---------------------------------------------------------------#
+
+#check file path
+current_directory = os.path.dirname(os.path.abspath(__file__))
+# Move up one directory
+parent_directory = os.path.dirname(current_directory)
+api_key_file = os.path.join(parent_directory, "api_key.txt")# Path to the text file containing the API key
+
+if os.path.exists(api_key_file):
+    # Initialize the API with the retrieved key
+    openai.api_key = get_api_key(api_key_file)
+else:
+    app = QApplication(sys.argv)
+    prompt_for_api_key()
+    app.exec()
 
 
-app = QApplication([])
-label = QLabel('Hello World!')
-label.show()
-app.exec()
-
+#--------------------Prompting for Audio file-------------------#
+#Here we are prompting for the audio file and asking it to be in#
+#MP3. once a file has been selected it will check if its an mp3 #
+#if its not it will ask for it again.                           #
+#---------------------------------------------------------------#
 
 # This is the main code, calling the main and aditional adjustment. 
 # Load the audio file
