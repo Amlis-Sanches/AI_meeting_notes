@@ -114,27 +114,6 @@ def save_as_docx(minutes, filename):
         doc.add_paragraph()
     doc.save(filename)
 
-def save_api_key(api_key):
-    # Determine the current directory where the script is located
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    # Move up one directory to get the parent directory
-    parent_directory = os.path.dirname(current_directory)
-    # Create the path to the api_key.txt file within that directory
-    api_key_file = os.path.join(parent_directory, "api_key.txt")
-    # Save the API key to the generated path
-    with open(api_key_file, 'w') as file:
-        file.write(api_key)
-
-
-def prompt_for_api_key():
-    # Get user input for the API key
-    api_key, ok = QInputDialog.getText(None, "API Key Input", "Please enter your API key:")
-
-    # If the user pressed OK and provided an input, save it to a file
-    if ok and api_key:
-        save_api_key(api_key)
-
-
 #----------------------------Main Body----------------------------------------
 def main():
 
@@ -182,9 +161,14 @@ if os.path.exists(api_key_file):
     openai.api_key = get_api_key(api_key_file)
 else:
     app = QApplication(sys.argv)
-    prompt_for_api_key()
-    app.exec()
+    # Get user input for the API key
+    api_key, ok = QInputDialog.getText(None, "API Key Input", "Please enter your API key:")
 
+    # If the user pressed OK and provided an input, save it to a file
+    if ok and api_key:
+        with open(api_key_file, 'w') as file:
+            file.write(api_key)
+    app.exec()
 
 #--------------------Prompting for Audio file-------------------#
 #Here we are prompting for the audio file and asking it to be in#
