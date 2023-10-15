@@ -5,18 +5,17 @@ from pydub import AudioSegment
 from docx import Document
 from PyQt6.QtWidgets import *
 
+#Pull Files section
 #get your API key to run the code but save it outside of your git rapository. 
 api_key_file = r"C:\Users\natha\Documents\Coding\MeetingMinutesKey.txt"  # Path to the text file containing the API key
+
+#---------------------------------------------Functions-------------------------------------------------------------
 
 def get_api_key(api_key_file):
     with open(api_key_file, 'r') as file:
         api_key = file.read().strip()
     return api_key
 
-# Initialize the API with the retrieved key
-openai.api_key = get_api_key(api_key_file)
-
-#---------------------------------------------Functions-------------------------------------------------------------
 #check what type the audio file is. 
 def check_audio_format(file_path):
     _, extension = os.path.splitext(file_path)
@@ -117,6 +116,9 @@ def save_as_docx(minutes, filename):
 
 #----------------------------Main Body----------------------------------------
 def main():
+    # Initialize the API with the retrieved key
+    openai.api_key = get_api_key(api_key_file)
+
     audio_format = check_audio_format(audio_file_path)
 
     if audio_format != '.mp3':
@@ -145,6 +147,8 @@ def main():
     save_as_docx(minutes, 'meeting_minutes.docx')
 
 #-------------------------------Interactive window------------------------------
+
+
 app = QApplication([])
 label = QLabel('Hello World!')
 label.show()
