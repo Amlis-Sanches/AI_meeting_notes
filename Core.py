@@ -173,6 +173,7 @@ else:
     if ok and api_key:
         with open(api_key_file, 'w') as file:
             file.write(api_key)
+    openai.api_key = get_api_key(api_key_file)
     app.exec()
 
 #--------------------Prompting for Audio file-------------------#
@@ -180,6 +181,10 @@ else:
 #MP3. once a file has been selected it will check if its an mp3 #
 #if its not it will ask for it again.                           #
 #---------------------------------------------------------------#
+
+app = QApplication(sys.argv)
+audio_file, ok = QInputDialog.getText(None, "Audio File Name", "What is the Name of your Audio File")
+app.exec()
 
 # This is the main code, calling the main and aditional adjustment. 
 # Load the audio file
